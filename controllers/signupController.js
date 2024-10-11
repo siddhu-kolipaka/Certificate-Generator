@@ -1,6 +1,4 @@
 import bcrypt from "bcrypt";
-import dotenv from "dotenv";
-dotenv.config();
 
 import studentUsers from "../models/studentUsers.js";
 import teacherUsers from "../models/teacherUsers.js";
@@ -9,7 +7,7 @@ const handleTeacherSignup = async (req, res) => {
   const { email, name, password } = req.body;
   if (!email || !name || !password) {
     return res.json({
-      message: "Name, Password and Email are all needed to signup",
+      message: "All fields are needed to signup",
     });
   }
 
@@ -19,9 +17,9 @@ const handleTeacherSignup = async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    await registeredUsers.create({
-      email: email,
-      name: name,
+    await teacherUsers.create({
+      email,
+      name,
       password: hashedPassword,
     });
     return res.status(201).json({ message: `${name} is added` });
@@ -31,22 +29,26 @@ const handleTeacherSignup = async (req, res) => {
 };
 
 const handleStudentSignup = async (req, res) => {
-  const { email, name, password } = req.body;
-  if (!email || !name || !password) {
+  const { name, idno, topic, mentor, stdate, endate, password } = req.body;
+  if (!name || !idno || !topic || !mentor || !stdate || !endate || !password) {
     return res.json({
-      message: "Name, Password and Email are all needed to signup",
+      message: "All fiels are needed to signup",
     });
   }
 
-  const duplicate_email = await teacherUsers.findOne({ email });
-  if (duplicate_email)
-    return res.status(409).json({ message: "email already used" });
+  const duplicate_idno = await studentUsers.findOne({ idno });
+  if (duplicate_idno)
+    return res.status(409).json({ message: "idno already used" });
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    await registeredUsers.create({
-      email: email,
-      name: name,
+    await studentUsers.create({
+      name,
+      idno,
+      topic,
+      mentor,
+      stdate,
+      endate,
       password: hashedPassword,
     });
     return res.status(201).json({ message: `${name} is added` });
