@@ -182,17 +182,22 @@
         }
 
         const data = { idno };
-        const response = await fetch(`/students/${idno}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        })
-        const res = await response.json();
-        const { name, topic, mentor } = res;
-        const stdate = convertDateFormat(res.stdate);
-        const endate = convertDateFormat(res.endate);
+        try {
+          const response = await axios.post(url, data, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          this.reset();
+          errorMessage.style.opacity = "0";
+
+        } catch (error) {
+          console.error(error);
+        }
+        const { name, topic, mentor } = response;
+        const stdate = convertDateFormat(response.stdate);
+        const endate = convertDateFormat(response.endate);
 
         const timestamp = Date.now();
         const currentDate = new Date(timestamp);
