@@ -171,9 +171,12 @@
           },
           body: JSON.stringify(data),
         });
-
+        showError(response.data.message);
         this.reset();
-        window.location.href = `/student-profile/${idno}`
+        if (response.status <= 299) {
+          window.location.href = `/student-profile/${idno}`;
+
+        }
 
       } catch (error) {
         console.error(error);

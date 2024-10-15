@@ -193,11 +193,15 @@
 
         this.reset();
         errorMessage.style.opacity = "0";
-        console.log(response);
 
-        const { name, topic, mentor } = response;
-        const stdate = convertDateFormat(response.stdate);
-        const endate = convertDateFormat(response.endate);
+        if (response.status > 299) {
+          alert(response.data.message);
+          return;
+        }
+
+        const { name, topic, mentor } = response.data;
+        const stdate = convertDateFormat(response.data.stdate);
+        const endate = convertDateFormat(response.data.endate);
 
         const timestamp = Date.now();
         const currentDate = new Date(timestamp);

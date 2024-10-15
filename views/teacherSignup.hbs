@@ -213,9 +213,13 @@
             body: JSON.stringify(data),
           });
 
+          showError(response.data.message);
           this.reset();
           errorMessage.style.opacity = "0";
-          window.location.href = "/teacherLogin";
+          if (response.status <= 299) {
+            window.location.href = "/teacherLogin";
+          }
+
 
         } catch (error) {
           console.error(error);

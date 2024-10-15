@@ -199,12 +199,13 @@
               'Content-Type': 'application/json',
             },
           });
-          console.log(response);
 
-
+          showError(response.data.message);
           this.reset();
           errorMessage.style.opacity = "0";
-          window.location.href = "/certificate-generator";
+          if (response.status <= 299) {
+            window.location.href = "/certificate-generator";
+          }
 
         } catch (error) {
           console.error(error);
