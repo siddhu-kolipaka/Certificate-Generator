@@ -6,7 +6,7 @@ import teacherUsers from "../models/teacherUsers.js";
 const handleTeacherSignup = async (req, res) => {
   const { email, name, password } = req.body;
   if (!email || !name || !password) {
-    return res.json({
+    return res.status(400).json({
       message: "All fields are needed to signup",
     });
   }
@@ -31,7 +31,7 @@ const handleTeacherSignup = async (req, res) => {
 const handleStudentSignup = async (req, res) => {
   const { name, idno, topic, mentor, stdate, endate, password } = req.body;
   if (!name || !idno || !topic || !mentor || !stdate || !endate || !password) {
-    return res.json({
+    return res.status(400).json({
       message: "All fiels are needed to signup",
     });
   }
