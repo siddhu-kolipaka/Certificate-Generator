@@ -184,6 +184,7 @@
         }
 
         const data = { idno };
+        const url = `/students/${idno}`;
         const response = await axios.post(url, data, {
           headers: {
             'Content-Type': 'application/json',
