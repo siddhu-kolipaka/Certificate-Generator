@@ -10,10 +10,13 @@ import apiRouter from "./routes/auth/root.js";
 import rootRouter from "./routes/root.js";
 import connectDatabase from "./services/connectDatabase.js";
 import hbs from "hbs";
+import timeout from "connect-timeout";
 
 // env variables
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
+
+app.use(timeout("30s"));
 
 // middlewares
 app.use(cors());
