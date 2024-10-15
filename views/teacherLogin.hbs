@@ -169,7 +169,7 @@
       <div id="errorMessage" class="error-message"></div>
     </div>
   </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script>
     document
       .getElementById("loginForm")
@@ -194,13 +194,12 @@
         const data = { email, password };
         const url = "/auth/teacher-login";
         try {
-          const response = await fetch(url, {
-            method: 'POST',
+          const response = await axios.post(url, data, {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
           });
+          console.log(response);
 
 
           this.reset();
