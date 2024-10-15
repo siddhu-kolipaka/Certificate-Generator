@@ -15,8 +15,10 @@ import hbs from "hbs";
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
 
+const corsConfig = { origin: "*", credential: true, methods: ["GET", "POST"] };
+
 // middlewares
-app.use(cors());
+app.use(cors(corsConfig));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
