@@ -200,7 +200,7 @@
             },
           });
 
-          showError(response.data.message);
+          showError(response.data);
           this.reset();
           errorMessage.style.opacity = "0";
           if (response.status <= 299) {
