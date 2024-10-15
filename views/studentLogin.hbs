@@ -171,15 +171,12 @@
           },
           body: JSON.stringify(data),
         });
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(`Error: ${response.status}`);
-        }
+
         this.reset();
         window.location.href = `/student-profile/${idno}`
 
       } catch (error) {
-        console.log(error);
+        console.error(error.message);
       }
     });
 

@@ -212,16 +212,13 @@
           },
           body: JSON.stringify(data),
         });
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(`Error: ${response.status}`);
-        }
+
 
         this.reset();
         window.location.href = "/studentLogin";
 
       } catch (error) {
-        console.log(error);
+        console.error(error.message);
       }
     });
     const inputs = document.querySelectorAll("input");
