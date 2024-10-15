@@ -6,20 +6,22 @@ import {
 import studentUsers from "../models/studentUsers.js";
 const router = express.Router();
 
-router.route("/").get(async (req, res) => {
+import clearCookies from "../middlewares/clearCookies.js";
+
+router.route("/").get(clearCookies, async (req, res) => {
   res.render("home");
 });
 
 router.route("/studentSignup").get(async (req, res) => {
   res.render("studentSignup");
 });
-router.route("/studentLogin").get(async (req, res) => {
+router.route("/studentLogin").get(clearCookies, async (req, res) => {
   res.render("studentLogin");
 });
 router.route("/teacherSignup").get(async (req, res) => {
   res.render("teacherSignup");
 });
-router.route("/teacherLogin").get(async (req, res) => {
+router.route("/teacherLogin").get(clearCookies, async (req, res) => {
   res.render("teacherLogin");
 });
 

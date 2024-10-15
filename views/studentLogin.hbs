@@ -149,6 +149,7 @@
       <div id="errorMessage" class="error-message"></div>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
   <script>
     document.getElementById("loginForm").addEventListener("submit", async function (e) {
@@ -164,14 +165,12 @@
       const url = "/auth/student-login";
       data = { idno, password };
       try {
-        const response = await fetch(url, {
-          method: 'POST',
+        const response = await axios.post(url, data, {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(data),
         });
-        showError(response.data);
+        console.log("response:", response);
         this.reset();
         if (response.status <= 299) {
           window.location.href = `/student-profile/${idno}`;
@@ -179,7 +178,9 @@
         }
 
       } catch (error) {
-        console.error(error);
+        console.error("error:", error);
+        showError(error.response.data.message);
+
       }
     });
 

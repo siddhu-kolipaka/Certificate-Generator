@@ -200,7 +200,6 @@
             },
           });
 
-          showError(response.data);
           this.reset();
           errorMessage.style.opacity = "0";
           if (response.status <= 299) {
@@ -208,7 +207,9 @@
           }
 
         } catch (error) {
-          console.error(error);
+          console.error("error:", error);
+          showError(error.response.data.message);
+
         }
       });
 

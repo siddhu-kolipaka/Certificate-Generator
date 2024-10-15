@@ -20,7 +20,7 @@ const handleTeacherLogin = async (req, res) => {
     console.log("Logged in");
     res.cookie("role", "teacher", {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
     });
     res.status(200).redirect("/certificate-generator");
@@ -44,7 +44,7 @@ const handleStudentLogin = async (req, res) => {
   if (match) {
     res.cookie("secret", `${user.password}`, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
     });
     res.sendStatus(200);

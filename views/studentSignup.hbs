@@ -184,6 +184,7 @@
       </form>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
   <script>
     document.getElementById("signupForm").addEventListener("submit", async function (e) {
@@ -205,15 +206,12 @@
 
       const url = "/auth/student-signup";
       try {
-        const response = await fetch(url, {
-          method: 'POST',
+        const response = await axios.post(url, data, {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(data),
         });
 
-        showError(response.data);
         this.reset();
         errorMessage.style.opacity = "0";
         if (response.status <= 299) {
@@ -221,7 +219,9 @@
         }
 
       } catch (error) {
-        console.error(error);
+        console.error("error:", error);
+        alert(error.response.data.message);
+
       }
     });
     const inputs = document.querySelectorAll("input");
