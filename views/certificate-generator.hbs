@@ -203,9 +203,21 @@
         const currentDate = new Date(timestamp);
 
         function convertDateFormat(dateString) {
+          if (!dateString || typeof dateString !== 'string') {
+            console.error('Invalid date string:', dateString);
+            return '';
+          }
+
           const [year, month, day] = dateString.split('-');
+
+          if (!year || !month || !day) {
+            console.error('Date string is not in the expected format (YYYY-MM-DD):', dateString);
+            return '';
+          }
+
           return `${day}-${month}-${year}`;
         }
+
 
 
         const years = currentDate.getFullYear();
