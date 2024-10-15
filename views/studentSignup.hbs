@@ -140,6 +140,22 @@
         gap: 1.5rem;
       }
     }
+
+    .login-link {
+      text-align: center;
+      font-size: 0.875rem;
+      margin-top: 1.5rem;
+    }
+
+    .login-link a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .login-link a:hover {
+      color: var(--secondary-color);
+    }
   </style>
 </head>
 
@@ -182,6 +198,10 @@
         </div>
         <button type="submit">Sign Up</button>
       </form>
+      <div class="login-link">
+        Already have an account? <a href="/studentLogin">Log in</a>
+      </div>
+
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

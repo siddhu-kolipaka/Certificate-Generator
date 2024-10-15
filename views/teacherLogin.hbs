@@ -143,6 +143,22 @@
     .forgot-password a:hover {
       color: var(--secondary-color);
     }
+
+    .signup-link {
+      text-align: center;
+      font-size: 0.875rem;
+      margin-top: 1.5rem;
+    }
+
+    .signup-link a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .signup-link a:hover {
+      color: var(--secondary-color);
+    }
   </style>
 </head>
 
@@ -160,12 +176,12 @@
         <div class="form-group">
           <label for="password">Password</label>
           <input type="password" id="password" name="password" required />
-          <div class="forgot-password">
-            <a href="#">Forgot password?</a>
-          </div>
         </div>
         <button type="submit">Log In</button>
       </form>
+      <div class="signup-link">
+        Dont have an account? <a href="/teacherSignup">Sign Up</a>
+      </div>
       <div id="errorMessage" class="error-message"></div>
     </div>
   </div>

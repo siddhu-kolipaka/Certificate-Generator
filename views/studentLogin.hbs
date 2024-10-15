@@ -126,6 +126,22 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
+
+    .signup-link {
+      text-align: center;
+      font-size: 0.875rem;
+      margin-top: 1.5rem;
+    }
+
+    .signup-link a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .signup-link a:hover {
+      color: var(--secondary-color);
+    }
   </style>
 </head>
 
@@ -146,6 +162,9 @@
         </div>
         <button type="submit">Log In</button>
       </form>
+      <div class="signup-link">
+        Dont have an account? <a href="/studentSignup">Sign Up</a>
+      </div>
       <div id="errorMessage" class="error-message"></div>
     </div>
   </div>
