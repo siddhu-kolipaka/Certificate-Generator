@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Certificate Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --secondary-color: #7c3aed;
+      --background-color: #f3f4f6;
+      --text-color: #1f2937;
+      --input-border-color: #d1d5db;
+      --input-focus-color: #818cf8;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, var(--background-color), #e5e7eb);
+      color: var(--text-color);
+    }
+
+    .container {
+      background-color: white;
+      padding: 2.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 2.25rem;
+      text-align: center;
+      color: var(--primary-color);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-color);
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-color);
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 2px solid var(--input-border-color);
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+      background-color: transparent;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--input-focus-color);
+      box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.1);
+    }
+
+    .input-border {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      width: 0;
+      background-color: var(--input-focus-color);
+      transition: width 0.3s ease;
+    }
+
+    input:focus+.input-border {
+      width: 100%;
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      border-radius: 0.5rem;
+      background-color: var(--primary-color);
+      color: white;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+
+    button:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .error-message {
+      color: #dc2626;
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Enter ID Number</h1>
+    <p class="subtitle">
+      Please provide ID number of student to generate certificate
+    </p>
+    <form id="idForm">
+      <div class="form-group">
+        <label for="idno">ID Number</label>
+        <div class="input-wrapper">
+          <input type="text" id="idno" name="idno" required placeholder="e.g., ABC123456" />
+          <div class="input-border"></div>
+        </div>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+    <div id="errorMessage" class="error-message"></div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+  <script>
+    document
+      .getElementById("idForm")
+      .addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const idno = document.getElementById("idno").value.trim();
+        const errorMessage = document.getElementById("errorMessage");
+
+        if (!idno) {
+          showError("Please enter your ID number");
+          return;
+        }
+
+        const data = { idno };
+        const response = await fetch(`/students/${idno}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
+        const res = await response.json();
+        const { name, topic, mentor } = res;
+        const stdate = convertDateFormat(res.stdate);
+        const endate = convertDateFormat(res.endate);
+
+        const timestamp = Date.now();
+        const currentDate = new Date(timestamp);
+
+        function convertDateFormat(dateString) {
+          const [year, month, day] = dateString.split('-');
+          return `${day}-${month}-${year}`;
+        }
+
+
+        const years = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+
+        const date = `${day}-${month}-${years}`;
+
+
+
+        const xl = 16;
+        const l = 9;
+        const sm = 8;
+
+        {
+
+          const doc = new jsPDF();
+          doc.setFontSize(11);
+          doc.setFontStyle("bold");
+          doc.text(
+            10,
+            15,
+            `INDIAN INSTITUTE OF ENGINEERING\nSCIENCE AND TECHNOLOGY, SHIBPUR`
+          );
+          doc.text(130, 15, `DEPARTMENT OF COMPUTER\nSCIENCE & TECHNOLOGY`);
+          doc.setFontSize(sm);
+          doc.setFontStyle("normal");
+          doc.text(
+            10,
+            24,
+            `(Formerly Bengal Engineering & Science University, Shibpur)\nHowrah - 711 103, West Bengal (INDIA)\nTelephone: +91 33 2668 4561 (3 Lines) Extn. 521, 22, 23, 24\nFax: +91 33 2668 2916 / 0526\n`,
+            { lineHeightFactor: 1.2 }
+          );
+          doc.text(130, 24, `e-mail: cstdept@cs.iiests.ac.in`);
+          const imageDataURL =
+            "data:image/png;base64,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";
+          doc.addImage(imageDataURL, "PNG", 95, 10, 28, 28);
+          doc.text(
+            10,
+            43,
+            `_______________________________________________________________________________________________________________________`
+          );
+          doc.setFontSize(xl);
+          doc.setFontStyle("bold");
+          doc.text(85, 70, `CERTIFICATE`);
+          doc.setFontSize(11);
+          doc.setFontStyle("italic");
+
+          const pageWidth = doc.internal.pageSize.getWidth();
+          const xPos = pageWidth / 2;
+
+          doc.text(
+            xPos,
+            90,
+            `This is to certify that " ${name} " ( " ${idno} " ) of 6th semester undergraduate student in the Department of Computer Science and Technology, Indian Institute of Engineering Science and Technology, Shibpur, Howrah, West Bengal, India has successfully completed Summer Internship Program on " ${topic} " , under the guidance of " ${mentor} " in the Department of Computer Science and Technology, Indian Institute of Engineering Science and Technology, Shibpur during the period from ${stdate}  to  ${endate}.`,
+            {
+              maxWidth: 150,
+              align: 'center',
+              lineHeightFactor: 2,
+            }
+          );
+          doc.setFontSize(sm);
+          doc.text(
+            10,
+            180,
+            `_______________________________________________________________________________________________________________________`
+          );
+          doc.setFontSize(10);
+
+          doc.text(140, 190, `Dated: ${date}`);
+          doc.text(
+            20,
+            190,
+            `${mentor}\nDepartment of Computer Science and Technology\nIIEST Shibpur, Howrah - 711103.`,
+            { lineHeightFactor: 1.8 }
+          );
+          doc.save(`${idno}_Certificate.pdf`);
+        }
+
+      });
+
+
+    function showError(message) {
+      const errorMessage = document.getElementById("errorMessage");
+      errorMessage.textContent = message;
+      errorMessage.style.opacity = "1";
+    }
+
+    const input = document.getElementById("idno");
+    input.addEventListener("focus", function () {
+      this.style.transform = "scale(1.02)";
+    });
+    input.addEventListener("blur", function () {
+      this.style.transform = "scale(1)";
+    });
+
+
+  </script>
+
+</body>
+
+</html>

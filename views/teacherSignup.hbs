@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --secondary-color: #7c3aed;
+      --background-color: #f3f4f6;
+      --text-color: #1f2937;
+      --button-text-color: #ffffff;
+      --input-border-color: #d1d5db;
+    }
+
+    .bod {
+      font-family: "Inter", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, var(--background-color), #e5e7eb);
+      color: var(--text-color);
+    }
+
+    .container {
+      background-color: white;
+      padding: 2.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 2.25rem;
+      text-align: center;
+      color: var(--primary-color);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-color);
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-color);
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid var(--input-border-color);
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      border-radius: 0.5rem;
+      background-color: var(--primary-color);
+      color: var(--button-text-color);
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+
+    button:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .error-message {
+      color: #dc2626;
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .login-link {
+      text-align: center;
+      font-size: 0.875rem;
+      margin-top: 1.5rem;
+    }
+
+    .login-link a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .login-link a:hover {
+      color: var(--secondary-color);
+    }
+  </style>
+</head>
+
+<body>
+  {{>navbar}}
+  <div class="bod">
+    <div class="container">
+      <h1>Sign Up</h1>
+      <p class="subtitle">Create your account to get started</p>
+      <form id="signupForm">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <button type="submit">Sign Up</button>
+      </form>
+      <div id="errorMessage" class="error-message"></div>
+      <div class="login-link">
+        Already have an account? <a href="/teacherLogin">Log in</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document
+      .getElementById("signupForm")
+      .addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const errorMessage = document.getElementById("errorMessage");
+
+        // Basic validation
+        if (!name || !email || !password) {
+          showError("Please fill in all fields");
+          return;
+        }
+
+        if (!isValidEmail(email)) {
+          showError("Please enter a valid email address");
+          return;
+        }
+
+
+        if (password.length < 8) {
+          showError("Password must be at least 8 characters long");
+          return;
+        }
+
+        const data = { name, email, password };
+        const url = "/auth/teacher-signup";
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `Error: ${response.status}`);
+          }
+
+          this.reset();
+          errorMessage.style.opacity = "0";
+          window.location.href = "/teacherLogin";
+
+        } catch (error) {
+          showError(error.message);
+        }
+      });
+
+
+    function showError(message) {
+      const errorMessage = document.getElementById("errorMessage");
+      errorMessage.textContent = message;
+      errorMessage.style.opacity = "1";
+    }
+
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    const inputs = document.querySelectorAll("input");
+    inputs.forEach((input) => {
+      input.addEventListener("focus", function () {
+        this.style.transform = "scale(1.02)";
+      });
+      input.addEventListener("blur", function () {
+        this.style.transform = "scale(1)";
+      });
+    });
+
+  </script>
+</body>
+
+</html>

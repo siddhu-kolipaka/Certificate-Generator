@@ -17,6 +17,12 @@ const handleTeacherLogin = async (req, res) => {
   }
   const match = await bcrypt.compare(password, user.password);
   if (match) {
+    console.log("Logged in");
+    res.cookie("role", "teacher", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+    });
     res.status(200).redirect("/certificate-generator");
   } else {
     res.status(400).json({ message: "Wrong email/password" });
@@ -36,7 +42,12 @@ const handleStudentLogin = async (req, res) => {
   }
   const match = await bcrypt.compare(password, user.password);
   if (match) {
-    res.status(200).redirect("/student-profile");
+    res.cookie("secret", `${user.password}`, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+    });
+    res.sendStatus(200);
   } else {
     res.status(400).json({ message: "Wrong idno/password" });
   }

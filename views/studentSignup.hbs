@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #3a86ff;
+      --secondary-color: #8338ec;
+      --background-color: #f8f9fa;
+      --text-color: #212529;
+      --button-text-color: #ffffff;
+      --input-border-color: #ced4da;
+    }
+
+    .bod {
+      font-family: "Inter", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg,
+          rgba(58, 134, 255, 0.1),
+          rgba(131, 56, 236, 0.1));
+      color: var(--text-color);
+    }
+
+    .container {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+      text-align: center;
+      color: var(--primary-color);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-color);
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-color);
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid var(--input-border-color);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.1);
+    }
+
+    .date-inputs {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .date-group {
+      flex: 1;
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--primary-color);
+      color: var(--button-text-color);
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+
+    button:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 1.5rem;
+      }
+
+      .date-inputs {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  {{>navbar}}
+  <div class="bod">
+    <div class="container">
+      <h1>Sign Up</h1>
+      <p class="subtitle">Make your data available to your professor</p>
+      <form id="signupForm">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+        <div class="form-group">
+          <label for="idno">ID Number</label>
+          <input type="text" id="idno" name="idno" required />
+        </div>
+        <div class="form-group">
+          <label for="topic">Topic</label>
+          <input type="text" id="topic" name="topic" required />
+        </div>
+        <div class="form-group">
+          <label for="mentor">Mentor</label>
+          <input type="text" id="mentor" name="mentor" required />
+        </div>
+        <div class="date-inputs">
+          <div class="form-group date-group">
+            <label for="stdate">Start Date</label>
+            <input type="date" id="stdate" name="stdate" required />
+          </div>
+          <div class="form-group date-group">
+            <label for="endate">End Date</label>
+            <input type="date" id="endate" name="endate" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <button type="submit">Sign Up</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("signupForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData.entries());
+
+      // Basic validation
+      if (Object.values(data).some((value) => value === "")) {
+        alert("Please fill in all fields");
+        return;
+      }
+
+      if (new Date(data.stdate) >= new Date(data.endate)) {
+        alert("End date must be after start date");
+        return;
+      }
+
+      const url = "/auth/student-signup";
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(`Error: ${response.status}`);
+        }
+
+        this.reset();
+        window.location.href = "/studentLogin";
+
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    const inputs = document.querySelectorAll("input");
+    inputs.forEach((input) => {
+      input.addEventListener("focus", function () {
+        this.style.transform = "scale(1.02)";
+      });
+      input.addEventListener("blur", function () {
+        this.style.transform = "scale(1)";
+      });
+    });
+  </script>
+</body>
+
+</html>

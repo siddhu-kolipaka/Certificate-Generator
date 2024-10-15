@@ -1,0 +1,183 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --secondary-color: #7c3aed;
+      --background-color: #f3f4f6;
+      --text-color: #1f2937;
+      --card-background: rgba(255, 255, 255, 0.8);
+      --border-color: #e5e7eb;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      background: var(--card-background);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      padding: 2rem;
+      max-width: 600px;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      color: var(--primary-color);
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+      animation: fadeIn 1s ease-out;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--secondary-color);
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      animation: fadeIn 1.2s ease-out;
+    }
+
+    .student-info {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .info-item {
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+
+    .info-item:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: var(--secondary-color);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+      font-size: 1.1rem;
+      color: var(--text-color);
+    }
+
+
+
+
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 1.5rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="studentInfo">
+      <h1 id="studentName">{{name}}</h1>
+      <p class="subtitle">Student Profile</p>
+      <div class="student-info">
+        <div class="info-item">
+          <div class="info-label">ID Number</div>
+          <div class="info-value" id="studentId">{{idno}}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Topic</div>
+          <div class="info-value" id="studentTopic">{{topic}}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Mentor Name</div>
+          <div class="info-value" id="mentorName">{{mentor}}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Start Date</div>
+          <div class="info-value" id="startDate">{{stdate}}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">End Date</div>
+          <div class="info-value" id="endDate">{{endate}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+
+
+
+    async function populateStudentDetails() {
+      const loadingMessage = document.getElementById("loadingMessage");
+      const studentInfo = document.getElementById("studentInfo");
+      try {
+
+        const infoItems = document.querySelectorAll(".info-item");
+        infoItems.forEach((item, index) => {
+          setTimeout(() => {
+            item.style.animation = `fadeInUp 0.5s ease-out forwards`;
+          }, index * 100);
+        });
+      } catch (error) {
+        loadingMessage.textContent = "Error loading student data. Please try again later.";
+      }
+    }
+
+    window.onload = populateStudentDetails;
+  </script>
+</body>
+
+</html>
