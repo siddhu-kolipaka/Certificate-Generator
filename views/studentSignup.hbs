@@ -233,10 +233,8 @@
         });
 
         this.reset();
-        errorMessage.style.opacity = "0";
-        if (response.status <= 299) {
-          window.location.href = "/studentLogin";
-        }
+        window.location.href = "/studentLogin";
+
 
       } catch (error) {
         console.error("error:", error);

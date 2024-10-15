@@ -191,10 +191,9 @@
         });
         console.log("response:", response);
         this.reset();
-        if (response.status <= 299) {
-          window.location.href = `/student-profile/${idno}`;
+        window.location.href = `/student-profile/${idno}`;
 
-        }
+
 
       } catch (error) {
         console.error("error:", error);

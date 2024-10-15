@@ -218,9 +218,8 @@
 
           this.reset();
           errorMessage.style.opacity = "0";
-          if (response.status <= 299) {
-            window.location.href = "/certificate-generator";
-          }
+          window.location.href = "/certificate-generator";
+
 
         } catch (error) {
           console.error("error:", error);
